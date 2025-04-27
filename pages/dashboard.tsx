@@ -10,6 +10,7 @@ import {
   Flex,
   Spinner,
   Link,
+  useToast,
 } from '@chakra-ui/react';
 import { MdLock } from 'react-icons/md';
 import ProfileCard from '@/components/ProfileCard';
@@ -22,6 +23,8 @@ const DashboardPage = () => {
   const bgColor = useColorModeValue('gray.50', 'gray.700');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
   const router = useRouter();
+  const toast = useToast();
+
   const [user, setUser] = useState<User | null>(null);
   const [resumeUploaded, setResumeUploaded] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
@@ -50,6 +53,23 @@ const DashboardPage = () => {
 
   const handleUploadResume = () => {
     setResumeUploaded(true);
+    if (selectedRole) {
+      toast({
+        title: 'Resume uploaded',
+        description: `You're now matched with the ${selectedRole} role.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      toast({
+        title: 'Resume uploaded',
+        description: 'Please select a role to get personalized results.',
+        status: 'info',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   if (!user) {
