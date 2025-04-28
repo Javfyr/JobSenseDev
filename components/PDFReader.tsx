@@ -1,7 +1,18 @@
+// Ensure your imports are correctly pointing to where the modules are.
 import React, { useEffect, useState } from 'react';
-import { getDocument } from 'pdfjs-dist';
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist/legacy/build/pdf';
+import 'pdfjs-dist/legacy/build/pdf.worker';
 
-const PDFReader = ({ file }: { file: File | null }) => {
+// Set the worker URL
+GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
+
+const PDFReader = ({
+  file,
+  onTextExtracted,
+}: {
+  file: File | null;
+  onTextExtracted?: (text: string) => void;
+}) => {
   const [text, setText] = useState('');
 
   const extractTextFromPdf = async (file: File) => {
@@ -10,19 +21,26 @@ const PDFReader = ({ file }: { file: File | null }) => {
     reader.onload = async (event) => {
       if (event.target && event.target.result instanceof ArrayBuffer) {
         const arrayBuffer = event.target.result;
-        const loadingTask = getDocument(arrayBuffer);
+        const loadingTask = getDocument(new Uint8Array(arrayBuffer));
 
-        const pdf = await loadingTask.promise;
-        let allText = '';
+        try {
+          const pdfDocument = await loadingTask.promise;
+          let extractedText = '';
 
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          const strings = content.items.map((item: any) => item.str || '');
-          allText += strings.join(' ') + ' ';
+          for (let pageNum = 1; pageNum <= pdfDocument.numPages; pageNum++) {
+            const page = await pdfDocument.getPage(pageNum);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items
+              .map((item) => ('str' in item ? item.str : ''))
+              .join(' ');
+            extractedText += pageText + ' ';
+          }
+          console.log('Extracted Text:' + extractedText);
+          setText(extractedText);
+          onTextExtracted?.(extractedText);
+        } catch (error) {
+          console.error('Error while extracting text from PDF:', error);
         }
-
-        setText(allText);
       }
     };
 
