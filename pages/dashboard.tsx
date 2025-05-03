@@ -29,6 +29,8 @@ const DashboardPage = () => {
   const [resumeUploaded, setResumeUploaded] = useState(false);
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [availableRoles, setAvailableRoles] = useState<string[]>([]);
+  const [recommendations, setRecommendations] = useState<string[]>([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -51,6 +53,29 @@ const DashboardPage = () => {
     setSelectedRole(e.target.value);
   };
 
+  const fetchRecommendations = async () => {
+    try {
+      setLoadingRecommendations(true);
+      const response = await fetch('/api/getRecommendations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: selectedRole }),
+      });
+      const data = await response.json();
+      setRecommendations(data.recommendations || []);
+    } catch (error) {
+      toast({
+        title: 'Failed to fetch recommendations',
+        description: 'Please try again later.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setLoadingRecommendations(false);
+    }
+  };
+
   const handleUploadResume = () => {
     setResumeUploaded(true);
     if (selectedRole) {
@@ -61,6 +86,7 @@ const DashboardPage = () => {
         duration: 3000,
         isClosable: true,
       });
+      fetchRecommendations();
     } else {
       toast({
         title: 'Resume uploaded',
@@ -112,10 +138,21 @@ const DashboardPage = () => {
           borderWidth="1px"
           borderRadius="lg"
           borderColor={borderColor}
-          height="300px"
+          minHeight="300px"
         >
           {resumeUploaded && selectedRole ? (
-            <Text>Resume uploaded for role: {selectedRole}</Text>
+            loadingRecommendations ? (
+              <Spinner color="purple.500" />
+            ) : (
+              <>
+                <Text fontWeight="bold" mb={2}>Recommended Skills:</Text>
+                <VStack align="start" spacing={2}>
+                  {recommendations.map((rec, idx) => (
+                    <Text key={idx}>• {rec}</Text>
+                  ))}
+                </VStack>
+              </>
+            )
           ) : (
             <Flex
               direction="column"
