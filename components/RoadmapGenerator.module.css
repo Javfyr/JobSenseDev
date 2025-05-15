@@ -1,0 +1,95 @@
+/* Roadmap Generator General Styling */
+.roadmapGenerator {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.title {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Tab Styling */
+.tabContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 30px 0;
+}
+
+.tab {
+  background-color: #222;
+  color: #fff;
+  padding: 15px 30px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tab:hover {
+  background-color: #333;
+}
+
+.activeTab {
+  background-color: #1976d2;
+  color: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Roadmap Content */
+.roadmapHeading {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.roadmapButton {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  color: white;
+  background-color: #1976d2;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.roadmapButton:disabled {
+  background-color: #90caf9;
+  cursor: not-allowed;
+}
+
+.roadmapButton:hover:not(:disabled) {
+  background-color: #004ba0;
+}
+
+/* Add this to your RoadmapGenerator.module.css */
+.spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #007bff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
