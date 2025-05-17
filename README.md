@@ -1,6 +1,6 @@
 # Demo video
 
-https://drive.google.com/file/d/1m8RpzSpwp1y6N-RWU8Nt4-Z4zgzyVlab/view
+https://youtu.be/rqGPL79Xkt0?si=AgaZSHZwkljm0Z-n
 
 # JobSense
 
